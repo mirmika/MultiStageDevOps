@@ -35,7 +35,7 @@ jobs:
       - name: Debug PATH
         run: |
           echo $PATH
-          which minikube
+          which minikube || echo "minikube not found"
       - name: Start Minikube (if not already running)
         run: |
           export PATH=$PATH:/usr/local/bin
