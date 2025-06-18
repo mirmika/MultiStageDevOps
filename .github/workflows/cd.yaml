@@ -31,6 +31,7 @@ jobs:
             echo "env=prod" >> $GITHUB_OUTPUT
           else
             echo "env=unknown" >> $GITHUB_OUTPUT
+          fi
 
       - name: Enable Minikube Ingress
         run: |
