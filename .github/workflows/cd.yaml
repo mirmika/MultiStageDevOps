@@ -50,7 +50,7 @@ jobs:
         run: |
           cd $TERRAFORM_DIR
           terraform init
-          terraform apply -var="env=${{ steps.envname.outputs.env }}" -auto-approve
+          terraform apply -auto-approve
 
       - name: Deploy with Helm
         run: |
