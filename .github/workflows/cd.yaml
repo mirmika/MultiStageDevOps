@@ -32,11 +32,6 @@ jobs:
           else
             echo "env=unknown" >> $GITHUB_OUTPUT
           fi
-
-      - name: Enable Minikube Ingress
-        run: |
-          export PATH=$PATH:/usr/local/bin
-          minikube addons enable ingress
       - name: Debug PATH
         run: |
           echo $PATH
@@ -44,7 +39,12 @@ jobs:
       - name: Start Minikube (if not already running)
         run: |
           export PATH=$PATH:/usr/local/bin
-          minikube status || minikube start --driver=docker    
+          minikube status || minikube start --driver=docker   
+      - name: Enable Minikube Ingress
+        run: |
+          export PATH=$PATH:/usr/local/bin
+          minikube addons enable ingress
+       
       - name: Setup Terraform
         run: |
           cd $TERRAFORM_DIR
