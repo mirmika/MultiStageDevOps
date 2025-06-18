@@ -4,7 +4,7 @@ client:
 
   image:
     repository: mirmika/client
-    tag: prod-latest
+    tag: dev-latest
     pullPolicy: Always
 
   serviceAccount:

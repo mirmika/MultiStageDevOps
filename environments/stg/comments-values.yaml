@@ -5,7 +5,7 @@ comments:
 
   image:
     repository: mirmika/comments
-    tag: stg-latest
+    tag: dev-latest
     pullPolicy: Always
 
   serviceAccount:

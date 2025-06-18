@@ -4,8 +4,9 @@ metadata:
   name: {{ include "ingress.fullname" . }}
   namespace: {{ .Values.namespace }}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingressClassName }}
-    nginx.ingress.kubernetes.io/use-regex: "true"
+{{- range $key, $value := .Values.annotations }}
+    {{ $key }}: {{ $value | quote }}
+{{- end }}
 spec:
   ingressClassName: {{ .Values.ingressClassName }}
   rules:
@@ -14,7 +15,7 @@ spec:
         paths:
 {{- range .Values.paths }}
           - path: {{ .path }}
-            pathType: Prefix
+            pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
                 name: {{ .serviceName }}

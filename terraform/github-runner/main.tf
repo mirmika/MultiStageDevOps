@@ -19,7 +19,8 @@ provider "github" {
 }
 
 provider "kubernetes" {
-  config_path = var.kubeconfig_path
+  config_path    = "~/.kube/config"
+  config_context = "minikube"
 }
 
 resource "kubernetes_namespace" "runner_namespace" {

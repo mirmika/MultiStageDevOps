@@ -40,7 +40,7 @@ variable "runner_replicas" {
 
 variable "runner_labels" {
   type        = string
-  default     = "k8s,terraform"
+  default     = "minikube,kubernetes,helm,docker"
   description = "Labels for the GitHub runner."
 }
 

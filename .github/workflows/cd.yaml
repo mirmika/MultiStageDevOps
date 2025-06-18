@@ -1,20 +1,48 @@
-name: CD
+name: CD Pipeline
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - develop
+      - main
+    tags:
+      - 'v*'
+
+env:
+  TERRAFORM_DIR: terraform/minikube-setup
+  SCRIPTS_DIR: scripts
 
 jobs:
-  deploy-dev:
+  deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: v3.15.1
+      - name: Set environment name
+        id: envname
+        run: |
+          if [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
+            echo "env=dev" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            echo "env=stg" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "env=prod" >> $GITHUB_OUTPUT
+          else
+            echo "env=unknown" >> $GITHUB_OUTPUT
 
-      - name: Deploy to Dev
-        run: bash scripts/deploy-dev.sh
+      - name: Enable Minikube Ingress
+        run: |
+          minikube addons enable ingress
+
+      - name: Setup Terraform
+        run: |
+          cd $TERRAFORM_DIR
+          terraform init
+          terraform apply -var="env=${{ steps.envname.outputs.env }}" -auto-approve
+
+      - name: Deploy with Helm
+        run: |
+          chmod +x $SCRIPTS_DIR/deploy-${{ steps.envname.outputs.env }}.sh
+          $SCRIPTS_DIR/deploy-${{ steps.envname.outputs.env }}.sh

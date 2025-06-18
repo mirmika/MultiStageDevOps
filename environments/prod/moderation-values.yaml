@@ -4,7 +4,7 @@ replicaCount: 3
 
 image:
   repository: mirmika/moderation
-  tag: prod-latest
+  tag: dev-latest
   pullPolicy: Always
 
 serviceAccount:

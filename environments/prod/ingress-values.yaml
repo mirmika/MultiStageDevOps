@@ -3,7 +3,28 @@ ingress:
   enabled: true
   className: nginx
   host: prod.local
-  # if you need a TLS secret:
-  # tls:
-  #   enabled: false
-  #   secretName: my-tls-secret
+ 
+annotations:
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/use-regex: "true"
+
+paths:
+  - path: /posts/.*/comments
+    pathType: ImplementationSpecific
+    serviceName: comments
+    servicePort: 8002
+  - path: /post
+    serviceName: post
+    servicePort: 8001
+  - path: /posts
+    serviceName: query
+    servicePort: 8003
+  - path: /moderation
+    serviceName: moderation
+    servicePort: 8004
+  - path: /event-bus
+    serviceName: event-bus
+    servicePort: 8005
+  - path: /
+    serviceName: client
+    servicePort: 3000

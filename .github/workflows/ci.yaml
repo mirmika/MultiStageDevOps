@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: self-hosted  # must be your local machine with Docker
+    runs-on: self-hosted 
     strategy:
       matrix:
         service: [client, post, comments, query, moderation, event-bus]

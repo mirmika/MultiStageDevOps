@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: mirmika/event-bus
-  tag: stg-latest
+  tag: dev-latest
   pullPolicy: Always
 
 serviceAccount:
