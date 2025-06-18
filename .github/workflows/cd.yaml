@@ -35,8 +35,16 @@ jobs:
 
       - name: Enable Minikube Ingress
         run: |
+          export PATH=$PATH:/usr/local/bin
           minikube addons enable ingress
-
+      - name: Debug PATH
+        run: |
+          echo $PATH
+          which minikube
+      - name: Start Minikube (if not already running)
+        run: |
+          export PATH=$PATH:/usr/local/bin
+          minikube status || minikube start --driver=docker    
       - name: Setup Terraform
         run: |
           cd $TERRAFORM_DIR
