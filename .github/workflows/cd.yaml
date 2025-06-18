@@ -32,10 +32,11 @@ jobs:
           else
             echo "env=unknown" >> $GITHUB_OUTPUT
           fi 
-      - name: Debug PATH
+      - name: Debug PATH and Minikube
         run: |
-          echo $PATH
-          which minikube || echo "minikube not found"
+         echo $PATH
+         ls -l /usr/local/bin/minikube
+         /usr/local/bin/minikube version || echo "minikube failed"
       - name: Start Minikube (if not already running)
         run: |
           export PATH=$PATH:/usr/local/bin
