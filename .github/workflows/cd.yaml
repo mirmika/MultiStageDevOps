@@ -58,6 +58,20 @@ jobs:
             (echo "Namespace $NS already exists, continuing...")
           fi
 
+      - name: Install or upgrade MongoDB with Helm
+        run: |
+          NS=${{ steps.envname.outputs.env }}
+          if [[ "$NS" != "unknown" ]]; then
+            helm repo add bitnami https://charts.bitnami.com/bitnami || true
+            helm repo update
+            helm upgrade --install mongo bitnami/mongodb \
+              --set auth.enabled=false \
+              --set architecture=standalone \
+              -n $NS
+          else
+            echo "Unknown environment, skipping MongoDB install"
+          fi    
+
       - name: Ensure Secret Exists (optional)
         run: |
           NS=${{ steps.envname.outputs.env }}
