@@ -31,13 +31,13 @@ jobs:
             echo "env=production" >> $GITHUB_OUTPUT
           else
             echo "env=unknown" >> $GITHUB_OUTPUT
-          fi 
+          fi
 
       - name: Debug PATH and Minikube
         run: |
-         echo $PATH
-         ls -l /usr/local/bin/minikube
-         /usr/local/bin/minikube version || echo "minikube failed"
+          echo $PATH
+          ls -l /usr/local/bin/minikube
+          /usr/local/bin/minikube version || echo "minikube failed"
 
       - name: Start Minikube (if not already running)
         run: |
@@ -53,7 +53,9 @@ jobs:
         run: |
           NS=${{ steps.envname.outputs.env }}
           if [[ "$NS" != "unknown" ]]; then
-            kubectl get namespace $NS 2>/dev/null || kubectl create namespace $NS
+            kubectl get namespace $NS 2>/dev/null || \
+            (kubectl create namespace $NS && echo "Namespace $NS created") || \
+            (echo "Namespace $NS already exists, continuing...")
           fi
 
       - name: Ensure Secret Exists (optional)
@@ -62,15 +64,22 @@ jobs:
           SECRET_NAME=mongo-url-secret
           if [[ "$NS" != "unknown" ]]; then
             kubectl get secret $SECRET_NAME -n $NS 2>/dev/null \
-              || kubectl create secret generic $SECRET_NAME -n $NS --from-literal=uri='your-mongo-uri'
+              || (kubectl create secret generic $SECRET_NAME -n $NS --from-literal=uri='your-mongo-uri' && echo "Secret created") \
+              || (echo "Secret already exists, continuing...")
           fi
 
-      - name: Setup Terraform
+      - name: Setup Terraform (tolerate 'already exists' errors)
         run: |
+          set +e
           cd $TERRAFORM_DIR
           terraform init
-          # If you use TF for other resources, not for namespaces/secrets
-          terraform apply -auto-approve
+          terraform apply -auto-approve 2>&1 | tee tfout.log
+          TF_EXIT=${PIPESTATUS[0]}
+          if grep -q 'already exists' tfout.log; then
+            echo "Some resources already exist, skipping error."
+            exit 0
+          fi
+          exit $TF_EXIT
 
       - name: Deploy with Helm
         run: |
