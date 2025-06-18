@@ -31,7 +31,7 @@ jobs:
             echo "env=prod" >> $GITHUB_OUTPUT
           else
             echo "env=unknown" >> $GITHUB_OUTPUT
-          fi
+          fi 
       - name: Debug PATH
         run: |
           echo $PATH
