@@ -1,0 +1,9 @@
+namespace: staging
+ingress:
+  enabled: true
+  className: nginx
+  host: stg.local
+  # if you need a TLS secret:
+  # tls:
+  #   enabled: false
+  #   secretName: my-tls-secret

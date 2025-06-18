@@ -1,0 +1,30 @@
+# Default values for ingress chart.
+
+# the namespace into which the Ingress should be created
+namespace: development
+
+# host to listen on
+host: dev.local
+
+ingressClassName: nginx
+
+paths:
+  - path: /posts/.*/comments
+    pathType: ImplementationSpecific
+    serviceName: comments
+    servicePort: 8002
+  - path: /post
+    serviceName: post
+    servicePort: 8001
+  - path: /posts
+    serviceName: query
+    servicePort: 8003
+  - path: /moderation
+    serviceName: moderation
+    servicePort: 8004
+  - path: /event-bus
+    serviceName: event-bus
+    servicePort: 8005
+  - path: /
+    serviceName: client
+    servicePort: 3000

@@ -1,0 +1,15 @@
+namespace: staging
+
+replicaCount: 2
+
+image:
+  repository: mirmika/moderation
+  tag: stg-latest
+  pullPolicy: Always
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 8004

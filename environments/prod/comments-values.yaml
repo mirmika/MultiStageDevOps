@@ -1,0 +1,22 @@
+namespace: production
+
+comments:
+  replicaCount: 3
+
+  image:
+    repository: mirmika/comments
+    tag: prod-latest
+    pullPolicy: Always
+
+  serviceAccount:
+    create: true
+    name: comments-sa
+
+  service:
+    type: ClusterIP
+    port:       8002
+    targetPort: 8002
+
+  secrets:
+    mongoUrlSecret: mongo-url-secret
+    mongoUrlKey:    MONGO_URL

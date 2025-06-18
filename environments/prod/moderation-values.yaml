@@ -1,0 +1,15 @@
+namespace: production
+
+replicaCount: 3
+
+image:
+  repository: mirmika/moderation
+  tag: prod-latest
+  pullPolicy: Always
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 8004

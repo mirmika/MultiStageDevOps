@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: client
+spec:
+  replicas: {{ .Values.client.replicaCount }}
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      serviceAccountName: {{ .Release.Name }}-sa
+      containers:
+        - name: client
+          image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag }}"
+          imagePullPolicy: {{ .Values.client.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.client.service.port }}

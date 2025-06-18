@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  event-bus:
+    build:
+      context: ./services/event-bus
+      dockerfile: Dockerfile
+    image: event-bus:dev-latest
+    container_name: event-bus
+    networks:
+      msd-net:
+        aliases:
+          - event-bus-srv
+    ports:
+      - "4005:4005"
+
+  posts:
+    build:
+      context: ./services/posts
+      dockerfile: Dockerfile
+    image: posts:dev-latest
+    container_name: posts
+    depends_on:
+      - event-bus
+    networks:
+      msd-net:
+        aliases:
+          - posts-srv
+    ports:
+      - "8001:8001"
+
+  comments:
+    build:
+      context: ./services/comments
+      dockerfile: Dockerfile
+    image: comments:dev-latest
+    container_name: comments
+    depends_on:
+      - event-bus
+    networks:
+      msd-net:
+        aliases:
+          - comments-srv
+    ports:
+      - "4001:4001"
+
+  moderation:
+    build:
+      context: ./services/moderation
+      dockerfile: Dockerfile
+    image: moderation:dev-latest
+    container_name: moderation
+    depends_on:
+      - event-bus
+    networks:
+      msd-net:
+        aliases:
+          - moderation-srv
+    ports:
+      - "4003:4003"
+
+  query:
+    build:
+      context: ./services/query
+      dockerfile: Dockerfile
+    image: query:dev-latest
+    container_name: query
+    depends_on:
+      - event-bus
+      - posts
+      - comments
+      - moderation
+    networks:
+      msd-net:
+        aliases:
+          - query-srv
+    ports:
+      - "4002:4002"
+
+  client:
+    build:
+      context: ./services/client
+      dockerfile: Dockerfile
+    image: client:dev-latest
+    container_name: client
+    depends_on:
+      - query
+    networks:
+      msd-net:
+        aliases:
+          - client-srv
+    ports:
+      - "3000:3000"
+
+networks:
+  msd-net:
+    driver: bridge

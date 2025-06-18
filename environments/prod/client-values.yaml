@@ -1,0 +1,14 @@
+namespace: production
+client:
+  replicaCount: 3
+
+  image:
+    repository: mirmika/client
+    tag: prod-latest
+    pullPolicy: Always
+
+  serviceAccount:
+    create: true  
+
+  service:
+    port: 3000

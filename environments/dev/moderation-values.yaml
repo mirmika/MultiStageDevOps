@@ -1,0 +1,15 @@
+namespace: development
+
+replicaCount: 1
+
+image:
+  repository: mirmika/moderation
+  tag: dev-latest
+  pullPolicy: Always
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 8004

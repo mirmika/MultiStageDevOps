@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: comments
+spec:
+  type: {{ .Values.comments.service.type }}
+  selector:
+    app: comments
+  ports:
+    - port:       {{ .Values.comments.service.port }}
+      targetPort: {{ .Values.comments.service.targetPort }}
+      protocol:   TCP

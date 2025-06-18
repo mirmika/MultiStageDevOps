@@ -1,0 +1,15 @@
+namespace: development
+
+replicaCount: 1
+
+image:
+  repository: mirmika/event-bus
+  tag: dev-latest
+  pullPolicy: Always
+
+serviceAccount:
+  create: true   # we ignore .Values.serviceAccount.name and just generate it
+
+service:
+  type: ClusterIP
+  port: 8005

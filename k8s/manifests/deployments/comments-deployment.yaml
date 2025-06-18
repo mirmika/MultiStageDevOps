@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comments
+  template:
+    metadata:
+      labels:
+        app: comments
+    spec:
+      containers:
+        - name: comments
+          image: mirmika/comments:dev-latest
+          ports:
+            - containerPort: 8002
+          env:
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-url-secret
+                  key: MONGO_URL

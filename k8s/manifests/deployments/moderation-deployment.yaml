@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderation
+  template:
+    metadata:
+      labels:
+        app: moderation
+    spec:
+      containers:
+      - name: moderation
+        image: mirmika/moderation:dev-latest
+        ports:
+        - containerPort: 8004
+        

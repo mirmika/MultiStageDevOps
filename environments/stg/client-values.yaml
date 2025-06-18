@@ -1,0 +1,14 @@
+namespace: staging
+client:
+  replicaCount: 2
+
+  image:
+    repository: mirmika/client
+    tag: stg-latest
+    pullPolicy: Always
+
+  serviceAccount:
+    create: true  
+
+  service:
+    port: 3000

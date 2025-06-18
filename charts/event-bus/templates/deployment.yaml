@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "event-bus.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "event-bus.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "event-bus.fullname" . }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}-sa
+      containers:
+        - name: event-bus
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}

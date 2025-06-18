@@ -1,0 +1,9 @@
+namespace: production
+ingress:
+  enabled: true
+  className: nginx
+  host: prod.local
+  # if you need a TLS secret:
+  # tls:
+  #   enabled: false
+  #   secretName: my-tls-secret

@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+
+
+# Terraform sensitive files
+terraform/.terraform/
+terraform/**/*.tfstate
+terraform/**/*.tfstate.backup
+terraform/**/*.tfvars
+terraform/*.lock.hcl
+
+# Vault sensitive files
+vault/secrets/
+vault/*.json
+vault/*.token
+
+# Environment and configuration files
+*.env
+.env.*
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE/editor-specific files
+.idea/
+.vscode/
+*.suo
+*.user

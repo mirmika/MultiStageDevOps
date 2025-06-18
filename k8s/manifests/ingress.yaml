@@ -1,0 +1,64 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dev-ingress
+  namespace: development
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: dev.local
+      http:
+        paths:
+          # 1) Anything under /comments → comments service
+          - path: /comments
+            pathType: Prefix
+            backend:
+              service:
+                name: comments
+                port:
+                  number: 8002
+
+          # 2) Create a post (POST /post/…) → posts service
+          - path: /post
+            pathType: Prefix
+            backend:
+              service:
+                name: posts
+                port:
+                  number: 8001
+
+          # 3) Read all posts or fetch specific → query service
+          - path: /posts
+            pathType: Prefix
+            backend:
+              service:
+                name: query
+                port:
+                  number: 8003
+
+          # 4) Moderate comments → moderation service
+          - path: /moderation
+            pathType: Prefix
+            backend:
+              service:
+                name: moderation
+                port:
+                  number: 8004
+
+          # 5) Event bus API → event-bus service
+          - path: /event-bus
+            pathType: Prefix
+            backend:
+              service:
+                name: event-bus
+                port:
+                  number: 8005
+
+          # 6) Everything else → client
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client
+                port:
+                  number: 3000
