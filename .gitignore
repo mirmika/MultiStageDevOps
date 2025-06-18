@@ -30,3 +30,7 @@ Thumbs.db
 .vscode/
 *.suo
 *.user
+
+# Git runner files
+/actions-runner/
+/root/Projects/MultiStageDevOps/actions-runner/
