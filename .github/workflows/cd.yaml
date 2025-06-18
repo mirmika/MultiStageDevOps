@@ -81,7 +81,25 @@ jobs:
           fi
           exit $TF_EXIT
 
+      - name: Map environment to script short name
+        id: envshort
+        run: |
+          case "${{ steps.envname.outputs.env }}" in
+            development)
+              echo "short=dev" >> $GITHUB_OUTPUT
+              ;;
+            staging)
+              echo "short=stg" >> $GITHUB_OUTPUT
+              ;;
+            production)
+              echo "short=prod" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "short=unknown" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
       - name: Deploy with Helm
         run: |
-          chmod +x $SCRIPTS_DIR/deploy-${{ steps.envname.outputs.env }}.sh
-          $SCRIPTS_DIR/deploy-${{ steps.envname.outputs.env }}.sh
+          chmod +x $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh
+          $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh
