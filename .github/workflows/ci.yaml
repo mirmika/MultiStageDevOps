@@ -13,7 +13,7 @@ jobs:
     runs-on: self-hosted 
     strategy:
       matrix:
-        service: [client, post, comments, query, moderation, event-bus]
+        service: [client, posts, comments, query, moderation, event-bus]
 
     steps:
       - name: Checkout code
