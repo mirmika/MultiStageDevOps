@@ -1,5 +1,5 @@
 provider "kubernetes" {
-  config_path    = "/home/meryem/.kube/config"
+  config_path = "/home/devops/.kube/config"
   config_context = "minikube"
 }
 
