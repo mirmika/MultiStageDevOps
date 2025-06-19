@@ -2,7 +2,7 @@ FROM node:18-alpine
 
 # Add the following lines
 ENV CI=true
-ENV WDS_SOCKET_PORT=0
+ENV WDS_SOCKET_PORT=3000
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 WORKDIR /usr/app/client
