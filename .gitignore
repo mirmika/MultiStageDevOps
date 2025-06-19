@@ -2,12 +2,19 @@
 node_modules/
 
 
-# Terraform sensitive files
-terraform/.terraform/
+# Terraform working directories
+terraform/**/.terraform/
+
+# Terraform state, backup, and sensitive files
 terraform/**/*.tfstate
-terraform/**/*.tfstate.backup
+terraform/**/*.tfstate.*
 terraform/**/*.tfvars
-terraform/*.lock.hcl
+
+# Terraform lock files in any subdirectory
+terraform/**/*.lock.hcl
+
+# Kuma binaries (specifically in kuma-monitoring)
+terraform/kuma-monitoring/kuma-*/
 
 # Vault sensitive files
 vault/secrets/
