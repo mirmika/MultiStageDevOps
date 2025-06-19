@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
-  labels: posts
+  labels:
+    app: posts
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

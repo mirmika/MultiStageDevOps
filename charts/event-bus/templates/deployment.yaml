@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
-  labels: event-bus
+  labels:
+    app: event-bus
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
