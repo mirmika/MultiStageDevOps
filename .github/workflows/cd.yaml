@@ -93,8 +93,17 @@ jobs:
             exit 0
           fi
           exit $TF_EXIT
+      - name: Check if kuma-monitoring namespace exists
+        id: check-namespace
+        run: |
+          if kubectl get namespace kuma-monitoring; then
+           echo "exists=true" >> $GITHUB_OUTPUT
+          else
+           echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Kuma Uptime with Terraform
+        if: steps.check-namespace.outputs.exists == 'false'
         run: |
           cd $TERRAFORM_KUMA_DIR
           terraform init
