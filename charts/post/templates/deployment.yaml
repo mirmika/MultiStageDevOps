@@ -3,17 +3,16 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
-  labels:
-    {{- include "posts.labels" . | nindent 4 }}
+  labels: posts
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "posts.fullname" . }}
+      app: posts
   template:
     metadata:
       labels:
-        app: {{ include "posts.fullname" . }}
+        app: posts
     spec:
       serviceAccountName: {{ .Release.Name }}-sa
       containers:

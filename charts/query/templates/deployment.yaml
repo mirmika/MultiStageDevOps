@@ -3,17 +3,16 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
-  labels:
-    {{- include "query.labels" . | nindent 4 }}
+  labels: query
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "query.fullname" . }}
+      app: query
   template:
     metadata:
       labels:
-        app: {{ include "query.fullname" . }}
+        app: query
     spec:
       serviceAccountName: {{ .Release.Name }}-sa
       containers:

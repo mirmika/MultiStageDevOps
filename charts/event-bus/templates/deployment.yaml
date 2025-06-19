@@ -3,17 +3,16 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
-  labels:
-    {{- include "event-bus.labels" . | nindent 4 }}
+  labels: event-bus
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "event-bus.fullname" . }}
+      app: event-bus
   template:
     metadata:
       labels:
-        app: {{ include "event-bus.fullname" . }}
+        app: event-bus
     spec:
       serviceAccountName: {{ .Release.Name }}-sa
       containers:
