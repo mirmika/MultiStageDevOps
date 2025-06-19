@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "query.labels" . | nindent 4 }}
+    app: query
 spec:
   type: {{ .Values.service.type }}
   selector:

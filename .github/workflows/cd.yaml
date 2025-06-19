@@ -71,17 +71,7 @@ jobs:
           else
             echo "Unknown environment, skipping MongoDB install"
           fi    
-
-      - name: Ensure Secret Exists (optional)
-        run: |
-          NS=${{ steps.envname.outputs.env }}
-          SECRET_NAME=mongo-url-secret
-          if [[ "$NS" != "unknown" ]]; then
-            kubectl get secret $SECRET_NAME -n $NS 2>/dev/null \
-              || (kubectl create secret generic $SECRET_NAME -n $NS --from-literal=uri='your-mongo-uri' && echo "Secret created") \
-              || (echo "Secret already exists, continuing...")
-          fi
-
+          
       - name: Setup Terraform (tolerate 'already exists' errors)
         run: |
           set +e
@@ -116,4 +106,4 @@ jobs:
       - name: Deploy with Helm
         run: |
           chmod +x $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh
-          $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh
+          $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh --history-max 3

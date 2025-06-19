@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "moderation.labels" . | nindent 4 }}
+    app: moderation
 spec:
   type: {{ .Values.service.type }}
   selector:

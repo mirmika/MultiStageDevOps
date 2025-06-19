@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "event-bus.labels" . | nindent 4 }}
+    app: event-bus
 spec:
   type: {{ .Values.service.type }}
   selector:
