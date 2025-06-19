@@ -1,6 +1,9 @@
 # Node modules
 node_modules/
 
+#scripts
+scripts/*.tmp
+scripts/*.bak
 
 # Terraform working directories
 terraform/**/.terraform/
@@ -15,6 +18,7 @@ terraform/**/*.lock.hcl
 
 # Kuma binaries (specifically in kuma-monitoring)
 terraform/kuma-monitoring/kuma-*/
+terraform/kuma-monitoring/kuma-2.11.0/*
 
 # Vault sensitive files
 vault/secrets/

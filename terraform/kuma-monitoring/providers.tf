@@ -1,11 +1,13 @@
-provider "kubernetes" {
-  config_path    = "/home/devops/.kube/config"
-  config_context = "minikube"
+terraform {
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.28"
+    }
+  }
 }
 
-provider "helm" {
-  kubernetes = {
-    config_path    = "/home/devops/.kube/config"
-    config_context = "minikube"
-  }
+provider "kubernetes" {
+  config_path    = "~/.kube/config"
+  config_context = "minikube"
 }

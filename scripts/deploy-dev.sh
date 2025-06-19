@@ -1,7 +1,7 @@
 #!/bin/bash
 
 helm upgrade --install client      charts/client      -n development -f environments/dev/client-values.yaml
-helm upgrade --install post        charts/post        -n development -f environments/dev/post-values.yaml
+helm upgrade --install posts        charts/post        -n development -f environments/dev/post-values.yaml
 helm upgrade --install comments    charts/comments    -n development -f environments/dev/comments-values.yaml
 helm upgrade --install query       charts/query       -n development -f environments/dev/query-values.yaml
 helm upgrade --install moderation  charts/moderation  -n development -f environments/dev/moderation-values.yaml

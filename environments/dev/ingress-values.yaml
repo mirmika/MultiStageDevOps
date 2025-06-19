@@ -14,7 +14,7 @@ paths:
     serviceName: comments
     servicePort: 8002
   - path: /post
-    serviceName: post
+    serviceName: posts
     servicePort: 8001
   - path: /posts
     serviceName: query
