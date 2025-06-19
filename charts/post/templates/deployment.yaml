@@ -5,6 +5,8 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: posts
+  annotations:                 
+        kuma.io/sidecar-injection: enabled  
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

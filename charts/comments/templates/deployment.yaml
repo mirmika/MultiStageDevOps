@@ -17,6 +17,8 @@ spec:
     metadata:
       labels:
         app: comments
+      annotations:                 
+        kuma.io/sidecar-injection: enabled  
     spec:
       serviceAccountName: {{ .Values.comments.serviceAccount.name }}
       containers:

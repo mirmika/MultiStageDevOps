@@ -8,7 +8,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ include "moderation.fullname" . }}
+    app: moderation
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
