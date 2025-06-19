@@ -2,6 +2,10 @@ resource "kubernetes_namespace" "kuma_monitoring" {
   metadata {
     name = "kuma-monitoring"
   }
+
+  lifecycle {
+    ignore_changes = [metadata]
+  }
 }
 
 resource "kubernetes_persistent_volume_claim" "kuma_pvc" {
@@ -11,7 +15,7 @@ resource "kubernetes_persistent_volume_claim" "kuma_pvc" {
   }
 
   spec {
-    access_modes       = ["ReadWriteOnce"]
+    access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
         storage = "1Gi"
