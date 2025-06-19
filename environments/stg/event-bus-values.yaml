@@ -1,6 +1,6 @@
 namespace: staging
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: mirmika/event-bus

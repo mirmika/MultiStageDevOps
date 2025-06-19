@@ -1,7 +1,7 @@
 namespace: production
 
 comments:
-  replicaCount: 3
+  replicaCount: 1
 
   image:
     repository: mirmika/comments

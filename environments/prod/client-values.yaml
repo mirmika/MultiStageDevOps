@@ -1,6 +1,6 @@
 namespace: production
 client:
-  replicaCount: 3
+  replicaCount: 1
 
   image:
     repository: mirmika/client
