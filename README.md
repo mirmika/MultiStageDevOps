@@ -1,168 +1,88 @@
-# MultiService App – Kubernetes Dev Deployment
+# MultiStageDevOps
 
-This project is a microservices-based application deployed to Kubernetes using **Helm**, **Minikube**, **Ingress**, and **MongoDB**.
+A comprehensive, production-like microservices architecture leveraging Kubernetes (Minikube), Helm, Terraform, Docker, GitHub Actions Runner, Kuma Monitoring, and fully automated CI/CD pipelines.
 
----
+This project demonstrates end-to-end automation of microservice deployments across multiple environments (dev, staging, prod), including infrastructure provisioning, application orchestration, and automated service uptime monitoring.
 
-## What's Included?
+## Project Overview
 
-- `client` – React frontend  
-- `post` – Handles post creation  
-- `comments` – Handles comments (MongoDB)  
-- `query` – Combines posts and comments  
-- `moderation` – Approves/rejects comments  
-- `event-bus` – Publishes and distributes events  
-- `ingress` – NGINX routing for all services
+- **Containerized Microservices:**
+  - client (frontend)
+  - comments
+  - event-bus (message broker)
+  - moderation
+  - posts
+  - query
+- **CI/CD Automation:** Local GitHub Actions Runner on Minikube orchestrates build, test, and deployment pipelines.
+- **Infrastructure as Code:** Terraform scripts automate all infrastructure provisioning.
+- **Kubernetes Orchestration:** Microservices are deployed as Docker containers to Minikube clusters via Helm charts.
+- **Automated Monitoring:** Kuma monitors service availability and uptime across all environments. Monitors are configured via CI/CD scripts.
 
----
+## Quick Start
 
-## Prerequisites
+### Prerequisites
 
-- Docker  
-- Minikube  
-- kubectl  
-- Helm
+- Minikube
+- kubectl
+- Helm 3
+- Docker
+- Terraform
+- GitHub Actions Runner (local)
 
----
+### 1. Start Minikube
 
-## 1. Start Minikube
+minikube start
 
-```bash
-minikube start --memory=4096 --cpus=2
-minikube addons enable ingress
-```
+### 2. CI/CD Pipeline Execution
 
----
+Pipelines are triggered on:
+- develop branch (development)
+- main branch (staging)
+- Tags (v*) for production
 
-## 2. Add Hosts
+Pipelines automate:
+- Infrastructure provisioning (Terraform)
+- MongoDB deployment (Helm)
+- Application deployment (Helm)
+- Kuma monitoring setup
 
-Add this to your `/etc/hosts` (or Windows `C:\Windows\System32\drivers\etc\hosts`):
+### 3. Access Services
 
-```
-127.0.0.1 dev.local
-127.0.0.1 stg.local
-127.0.0.1 prod.local
-```
+Forward necessary ports to access services and Kuma dashboards locally:
 
----
+cd scripts
+./port-forward-dev.sh
+./port-forward-stg.sh
+./port-forward-prod.sh
+./port-forward-kuma.sh
+...
+...
 
-## 3. Build and Push Docker Images
+Then, open the provided local URLs in your browser.
 
-```bash
-export DOCKER_BUILDKIT=0
+### 4. Uptime Kuma Deployment Details
 
-for SERVICE in client post comments query moderation event-bus; do
-  docker build --no-cache -t mirmika/$SERVICE:dev-latest ./services/$SERVICE
-  docker push mirmika/$SERVICE:dev-latest
-  minikube image load mirmika/$SERVICE:dev-latest
-done
-```
+- **Image:** Uses the latest `louislam/uptime-kuma` container image.
+- **Platform:** Deployed on Kubernetes (Minikube).
+- **Configuration:** No custom environment variables set (e.g., API enablement flags).
+- **Network Access:**
+    - Internal container port: 3001
+    - Exposed externally via Kubernetes NodePort: 3005
+    - Or, for direct port-forwarding:
 
----
+      kubectl port-forward svc/<kuma-service-name> -n <kuma-namespace> 3005:3001 --address='0.0.0.0'
 
-## 4. Install MongoDB
+### 5. Cleanup
 
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
+Use the provided scripts to remove resources and stop Minikube:
 
-helm install mongo bitnami/mongodb \
-  --set auth.enabled=false \
-  --set architecture=standalone \
-  -n development --create-namespace
-```
+cd scripts
+./cleanup-dev.sh
+./cleanup-stg.sh
+./cleanup-prod.sh
+minikube stop
 
-Create the MongoDB secret:
+## Additional Notes
 
-```bash
-kubectl create secret generic mongo-url-secret \
-  --from-literal=MONGO_URL="mongodb://mongo-mongodb:27017/comments" \
-  -n development
-```
-
----
-
-## 5. Deploy All Services
-
-```bash
-chmod +x ./scripts/deploy-dev.sh
-./scripts/deploy-dev.sh
-```
-
-This uses Helm to deploy all services into the `development` namespace.
-
----
-
-## 🌐 Access the App
-
-Forward ingress controller:
-
-```bash
-kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 8080:80
-```
-
-Then open in browser:
-
-```
-http://dev.local:8080
-```
-
----
-
-## Example API Tests
-
-Create a post:
-
-```bash
-curl -X POST http://dev.local:8080/post/create \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Hello"}'
-```
-
-Get all posts:
-
-```bash
-curl http://dev.local:8080/posts
-```
-
-Add a comment:
-
-```bash
-curl -X POST http://dev.local:8080/posts/<POST_ID>/comments \
-  -H "Content-Type: application/json" \
-  -d '{"content":"Nice post!"}'
-```
-
----
-
-## Cleanup
-
-```bash
-chmod +x ./scripts/cleanup-dev.sh
-./scripts/cleanup-dev.sh
-```
-
----
-
-## Folder Structure
-
-```
-charts/             # Helm charts for each service
-environments/dev/   # Helm values for dev
-environments/stg/   # Helm values for staging
-environments/prod/  # Helm values for production
-scripts/            # Shell scripts for deployment
-services/           # Microservice source code
-```
-
----
-
-## 🚥 Environments
-
-Each environment has:
-
-- its own Helm values under `environments/<env>/`
-- its own deploy/cleanup script:
-  - `deploy-dev.sh`, `deploy-stg.sh`, `deploy-prod.sh`
-  - `cleanup-dev.sh`, `cleanup-stg.sh`, `cleanup-prod.sh`
-```
+- All Kubernetes manifests (`k8s/manifests/`) are for local testing.
+- Terraform and Helm actions are automated via CI/CD; port-forwarding scripts require manual execution.
