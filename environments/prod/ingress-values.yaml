@@ -9,22 +9,41 @@ annotations:
   nginx.ingress.kubernetes.io/use-regex: "true"
 
 paths:
+  # Frontend Client at root
+  - path: /
+    serviceName: client
+    servicePort: 3000
+
+  # Comments service
   - path: /posts/.*/comments
     pathType: ImplementationSpecific
     serviceName: comments
     servicePort: 8002
+  - path: /comments-db
+    pathType: ImplementationSpecific
+    serviceName: comments
+    servicePort: 8002
+
+  # Posts service
+  - path: /post/create
+    serviceName: posts
+    servicePort: 8001
   - path: /post
     serviceName: posts
     servicePort: 8001
+  - path: /posts-db
+    serviceName: posts
+    servicePort: 8001
+
+  # Query service
   - path: /posts
     serviceName: query
     servicePort: 8003
-  - path: /moderation
-    serviceName: moderation
-    servicePort: 8004
-  - path: /event-bus
+  - path: /query-db
+    serviceName: query
+    servicePort: 8003
+
+  # Event-bus service
+  - path: /events
     serviceName: event-bus
     servicePort: 8005
-  - path: /
-    serviceName: client
-    servicePort: 3000
