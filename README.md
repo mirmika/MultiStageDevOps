@@ -82,6 +82,12 @@ cd scripts
 ./cleanup-prod.sh
 minikube stop
 
+## Note
+The current backend code does not support persistent databases.
+However, a sample MongoDB secret (connection string) is included in Vault as an example of how to manage secrets securely.
+
+If you wish to use MongoDB (or any persistent DB), the backend code must first be refactored to use it.
+
 ## Additional Notes
 
 - All Kubernetes manifests (`k8s/manifests/`) are for local testing.

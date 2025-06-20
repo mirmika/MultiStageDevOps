@@ -17,6 +17,5 @@ comments:
     port:       8002
     targetPort: 8002
 
-  secrets:
-    mongoUrlSecret: mongo-url-secret
-    mongoUrlKey:    MONGO_URL
+  vaultRole: development-vault-role
+  vaultSecretPath: secret/data/development/mongo-url

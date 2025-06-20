@@ -24,6 +24,7 @@ terraform/kuma-monitoring/kuma-2.11.0/*
 vault/secrets/
 vault/*.json
 vault/*.token
+scripts/setup-vault.sh
 
 # Environment and configuration files
 *.env

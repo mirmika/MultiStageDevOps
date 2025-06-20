@@ -19,6 +19,11 @@ spec:
         app: comments
       annotations:                 
         kuma.io/sidecar-injection: enabled  
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "{{ .Values.comments.vaultRole }}"
+        vault.hashicorp.com/agent-inject-secret-mongo: "{{ .Values.comments.vaultSecretPath }}"
+        vault.hashicorp.com/agent-inject-template-mongo: |-
+          {{- printf "{{- with secret \"%s\" -}}\nMONGO_URL={{ .Data.data.MONGO_URL }}\n{{- end }}" .Values.comments.vaultSecretPath | nindent 10 }}
     spec:
       serviceAccountName: {{ .Values.comments.serviceAccount.name }}
       containers:
@@ -27,9 +32,5 @@ spec:
           imagePullPolicy: {{ .Values.comments.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.comments.service.port }}
-          env:
-            - name: MONGO_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.comments.secrets.mongoUrlSecret }}
-                  key:  {{ .Values.comments.secrets.mongoUrlKey }}
+          command: ["/bin/sh"]
+          args: ["-c", ". /vault/secrets/mongo && exec node index.js"]

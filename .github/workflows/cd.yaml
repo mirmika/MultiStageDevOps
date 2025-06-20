@@ -93,17 +93,13 @@ jobs:
             exit 0
           fi
           exit $TF_EXIT
-      - name: Check if kuma-monitoring namespace exists
-        id: check-namespace
+
+      - name: Clean kuma-monitoring namespace
         run: |
-          if kubectl get namespace kuma-monitoring; then
-           echo "exists=true" >> $GITHUB_OUTPUT
-          else
-           echo "exists=false" >> $GITHUB_OUTPUT
-          fi
+          chmod +x $SCRIPTS_DIR/clean-kuma-monitoring.sh
+          $SCRIPTS_DIR/clean-kuma-monitoring.sh
 
       - name: Setup Kuma Uptime with Terraform
-        if: steps.check-namespace.outputs.exists == 'false'
         run: |
           cd $TERRAFORM_KUMA_DIR
           terraform init
@@ -126,7 +122,16 @@ jobs:
               echo "short=unknown" >> $GITHUB_OUTPUT
               ;;
           esac
+      - name: Cleanup existing Vault setup
+        run: |
+          chmod +x $SCRIPTS_DIR/cleanup-vault.sh
+          $SCRIPTS_DIR/cleanup-vault.sh
 
+      - name: Setup Vault dynamically based on environment
+        run: |
+          chmod +x $SCRIPTS_DIR/setup-vault.sh
+          $SCRIPTS_DIR/setup-vault.sh ${{ steps.envname.outputs.env }}
+          
       - name: Deploy with Helm
         run: |
           chmod +x $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh
