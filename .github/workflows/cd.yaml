@@ -134,7 +134,7 @@ jobs:
           $SCRIPTS_DIR/setup-vault.sh ${{ steps.envname.outputs.env }}
 
           # Short wait to allow pods to initialize
-          sleep 10
+          sleep 20
 
           kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=vault -n vault --timeout=180s
 
