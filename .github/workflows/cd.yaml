@@ -131,6 +131,7 @@ jobs:
         run: |
           chmod +x $SCRIPTS_DIR/setup-vault.sh
           $SCRIPTS_DIR/setup-vault.sh ${{ steps.envname.outputs.env }}
+          kubectl rollout status deployment/vault -n vault --timeout=180s
           
       - name: Deploy with Helm
         run: |
