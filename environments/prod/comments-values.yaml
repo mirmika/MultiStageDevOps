@@ -18,4 +18,4 @@ comments:
     targetPort: 8002
 
   vaultRole: production-vault-role
-  vaultSecretPath: secret/data/development/mongo-url
+  vaultSecretPath: secret/data/production/mongo-url

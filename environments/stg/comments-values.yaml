@@ -18,4 +18,4 @@ comments:
     targetPort: 8002
 
   vaultRole: staging-vault-role
-  vaultSecretPath: secret/data/development/mongo-url
+  vaultSecretPath: secret/data/staging/mongo-url
