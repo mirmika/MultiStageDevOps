@@ -123,6 +123,12 @@ minikube stop
 - A sample MongoDB secret (connection string) is included in Vault to demonstrate secure secret management.
 - To use MongoDB (or any persistent DB), refactor backend code accordingly.
 
+## Important:
+  After port-forwarding Uptime Kuma, you will need to manually create your own username and password for the initial login.
+  Once logged in, you can add monitoring dashboards and specify which services to monitor by entering URLs such as local.dev, local.stg, or local.pro, depending on the environment you want to observe.
+  Make sure these local hostnames are added to your system’s hosts file to ensure correct resolution and seamless monitoring.
+
+
 ## Additional Information
 
 - Kubernetes manifests (`k8s/manifests/`) are for local testing.
