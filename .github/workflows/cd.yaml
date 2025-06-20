@@ -122,7 +122,7 @@ jobs:
               echo "short=unknown" >> $GITHUB_OUTPUT
               ;;
           esac
-          
+
       - name: Cleanup existing Vault setup
         run: |
           chmod +x $SCRIPTS_DIR/cleanup-vault.sh
@@ -132,7 +132,7 @@ jobs:
         run: |
           chmod +x $SCRIPTS_DIR/setup-vault.sh
           $SCRIPTS_DIR/setup-vault.sh ${{ steps.envname.outputs.env }}
-          kubectl rollout status statefulset/vault -n vault --timeout=180s
+           kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=vault -n vault --timeout=180s
 
       - name: Deploy with Helm
         run: |
