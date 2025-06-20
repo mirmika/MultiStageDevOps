@@ -13,6 +13,7 @@ This project demonstrates end-to-end automation of microservice deployments acro
   - moderation
   - posts
   - query
+
 - **CI/CD Automation:** Local GitHub Actions Runner on Minikube orchestrates build, test, and deployment pipelines.
 - **Infrastructure as Code:** Terraform scripts automate all infrastructure provisioning.
 - **Kubernetes Orchestration:** Microservices are deployed as Docker containers to Minikube clusters via Helm charts.
@@ -31,64 +32,99 @@ This project demonstrates end-to-end automation of microservice deployments acro
 
 ### 1. Start Minikube
 
+```bash
 minikube start
+```
 
 ### 2. CI/CD Pipeline Execution
 
 Pipelines are triggered on:
+
 - develop branch (development)
 - main branch (staging)
-- Tags (v*) for production
+- Tags (`v*`) for production
 
 Pipelines automate:
+
 - Infrastructure provisioning (Terraform)
 - MongoDB deployment (Helm)
 - Application deployment (Helm)
 - Kuma monitoring setup
+- Secure secrets with Vault setup
 
-### 3. Access Services
+### 3. Local Kubernetes Ingress Setup (WSL)
 
-Forward necessary ports to access services and Kuma dashboards locally:
+When running Kubernetes locally via **Windows Subsystem for Linux (WSL)**, follow these steps to configure ingress hostnames (`local.dev`, `local.stg`, `local.pro`) for seamless access:
 
+1. **Retrieve your current WSL IP address:**
+
+   ```bash
+   WSL_IP=$(hostname -I | awk '{print $1}')
+   echo "Your WSL IP: $WSL_IP"
+   ```
+
+2. **Update your Windows hosts file:**
+
+   Open PowerShell as Administrator and add these entries (replace `<WSL_IP>` with your actual WSL IP):
+
+   ```powershell
+   Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value "`n<WSL_IP>`tlocal.dev"
+   Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value "`n<WSL_IP>`tlocal.stg"
+   Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value "`n<WSL_IP>`tlocal.pro"
+   ```
+
+   Alternatively, manually edit your Windows `hosts` file:
+
+   ```
+   C:\Windows\System32\drivers\etc\hosts
+   ```
+
+3. **Access Kubernetes services via browser:**
+
+   - Development: [http://local.dev:9080](http://local.dev:9080)
+   - Staging: [http://local.stg:9080](http://local.stg:9080)
+   - Production: [http://local.pro:9080](http://local.pro:9080)
+
+### 4. Access Services
+
+Forward ports to access services and Kuma dashboards locally:
+
+```bash
 cd scripts
 ./port-forward-dev.sh
 ./port-forward-stg.sh
 ./port-forward-prod.sh
 ./port-forward-kuma.sh
-...
-...
+```
 
 Then, open the provided local URLs in your browser.
 
-### 4. Uptime Kuma Deployment Details
+### 5. Uptime Kuma Deployment Details
 
 - **Image:** Uses the latest `louislam/uptime-kuma` container image.
-- **Platform:** Deployed on Kubernetes (Minikube).
-- **Configuration:** No custom environment variables set (e.g., API enablement flags).
-- **Network Access:**
-    - Internal container port: 3001
-    - Exposed externally via Kubernetes NodePort: 3005
-    - Or, for direct port-forwarding:
+- **Platform:** Kubernetes (Minikube)
+- **Configuration:** No custom environment variables set.
 
-      kubectl port-forward svc/<kuma-service-name> -n <kuma-namespace> 3005:3001 --address='0.0.0.0'
+### 6. Cleanup
 
-### 5. Cleanup
+Use provided scripts to remove resources and stop Minikube:
 
-Use the provided scripts to remove resources and stop Minikube:
-
+```bash
 cd scripts
 ./cleanup-dev.sh
 ./cleanup-stg.sh
 ./cleanup-prod.sh
 minikube stop
+```
 
-## Note
-The current backend code does not support persistent databases.
-However, a sample MongoDB secret (connection string) is included in Vault as an example of how to manage secrets securely.
+## Notes
 
-If you wish to use MongoDB (or any persistent DB), the backend code must first be refactored to use it.
+- The current backend code does not support persistent databases.
+- A sample MongoDB secret (connection string) is included in Vault to demonstrate secure secret management.
+- To use MongoDB (or any persistent DB), refactor backend code accordingly.
 
-## Additional Notes
+## Additional Information
 
-- All Kubernetes manifests (`k8s/manifests/`) are for local testing.
-- Terraform and Helm actions are automated via CI/CD; port-forwarding scripts require manual execution.
+- Kubernetes manifests (`k8s/manifests/`) are for local testing.
+- Terraform and Helm actions are fully automated via CI/CD.
+- Port-forwarding scripts require manual execution.
