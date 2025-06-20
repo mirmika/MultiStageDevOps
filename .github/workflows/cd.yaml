@@ -130,9 +130,11 @@ jobs:
 
       - name: Setup Vault dynamically based on environment 
         run: |
+          kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=vault -n vault --timeout=180s
           chmod +x $SCRIPTS_DIR/setup-vault.sh
           $SCRIPTS_DIR/setup-vault.sh ${{ steps.envname.outputs.env }}
-           kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=vault -n vault --timeout=180s
+          sleep 10
+          kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=vault -n vault --timeout=180s
 
       - name: Deploy with Helm
         run: |
