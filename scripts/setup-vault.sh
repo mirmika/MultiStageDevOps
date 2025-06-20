@@ -14,9 +14,9 @@ NAMESPACE="$ENVIRONMENT"
 VAULT_NS="vault"
 VAULT_RELEASE="vault"
 SERVICE_ACCOUNT="comments-sa"
-POLICY_NAME="development-vault-policy"
-ROLE_NAME="development-vault-role"
-SECRET_PATH="secret/development/mongo-url"
+POLICY_NAME="${ENVIRONMENT}-vault-policy"
+ROLE_NAME="${ENVIRONMENT}-vault-role"
+SECRET_PATH="secret/${ENVIRONMENT}/mongo-url"
 MONGO_URL="mongodb://mongo:27017/comments"
 HELM_VERSION="0.30.0"
 
@@ -53,7 +53,7 @@ kubectl exec "$VAULT_POD" -n "$VAULT_NS" -- vault write auth/kubernetes/config \
 
 # Create Vault policy for KV v2 secret explicitly
 cat <<EOF > /tmp/mongo-policy.hcl
-path "secret/data/development/mongo-url" {
+path "secret/data/${ENVIRONMENT}/mongo-url" {
   capabilities = ["read"]
 }
 EOF
