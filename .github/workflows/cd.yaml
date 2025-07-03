@@ -123,28 +123,43 @@ jobs:
               ;;
           esac
 
-      - name: Cleanup existing Vault setup
-        run: |
-          chmod +x $SCRIPTS_DIR/cleanup-vault.sh
-          $SCRIPTS_DIR/cleanup-vault.sh
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Setup Vault dynamically based on environment 
+      - name: Setup or Configure Vault dynamically
         run: |
           chmod +x $SCRIPTS_DIR/setup-vault.sh
-          $SCRIPTS_DIR/setup-vault.sh ${{ steps.envname.outputs.env }}
+          chmod +x $SCRIPTS_DIR/configure-vault.sh
 
-          # Short wait to allow pods to initialize
+          VAULT_NS="vault"
+          VAULT_POD=$(kubectl get pods -n $VAULT_NS -l app.kubernetes.io/name=vault -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)
+          ENVIRONMENT=${{ steps.envname.outputs.env }}
+
+          if [[ -z "$VAULT_POD" ]]; then
+            echo "Vault pod not found, running setup-vault.sh (fresh install)..."
+            $SCRIPTS_DIR/setup-vault.sh "$ENVIRONMENT"
+          else
+            # Check if Vault is initialized (returns true or false)
+            IS_INIT=$(kubectl exec "$VAULT_POD" -n $VAULT_NS -- vault status -format=json | jq -r .initialized 2>/dev/null || echo "false")
+            if [[ "$IS_INIT" == "true" ]]; then
+              echo "Vault is already initialized. Running configure-vault.sh..."
+              $SCRIPTS_DIR/configure-vault.sh "$ENVIRONMENT"
+            else
+              echo "Vault pod exists but is not initialized. Running setup-vault.sh..."
+              $SCRIPTS_DIR/setup-vault.sh "$ENVIRONMENT"
+            fi
+          fi
+
+          # Wait for pod to be ready after any operation
           sleep 20
-
           kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=vault -n vault --timeout=180s
-
 
       - name: Deploy with Helm
         run: |
           chmod +x $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh
           $SCRIPTS_DIR/deploy-${{ steps.envshort.outputs.short }}.sh --history-max 3
 
-      - name: Start Environment Port-Forwarding Scripts
+      - name: Start Port-Forwarding Script
         run: |
-          chmod +x $SCRIPTS_DIR/port-forward-${{ steps.envshort.outputs.short }}.sh
-          nohup $SCRIPTS_DIR/port-forward-${{ steps.envshort.outputs.short }}.sh &
+          chmod +x $SCRIPTS_DIR/port-forward.sh
+          nohup $SCRIPTS_DIR/port-forward.sh &

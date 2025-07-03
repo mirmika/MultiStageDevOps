@@ -81,9 +81,9 @@ When running Kubernetes locally via **Windows Subsystem for Linux (WSL)**, follo
 
 3. **Access Kubernetes services via browser:**
 
-   - Development: [http://local.dev:9080](http://local.dev:9080)
-   - Staging: [http://local.stg:9080](http://local.stg:9080)
-   - Production: [http://local.pro:9080](http://local.pro:9080)
+   - Development: [http://local.dev:9080](http://local.dev:7080)
+   - Staging: [http://local.stg:9080](http://local.stg:7080)
+   - Production: [http://local.pro:9080](http://local.pro:7080)
 
 ### 4. Access Services
 
@@ -91,10 +91,7 @@ Forward ports to access services and Kuma dashboards locally:
 
 ```bash
 cd scripts
-./port-forward-dev.sh
-./port-forward-stg.sh
-./port-forward-prod.sh
-./port-forward-kuma.sh
+./port-forward.sh
 ```
 
 Then, open the provided local URLs in your browser.

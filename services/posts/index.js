@@ -58,7 +58,7 @@ app.get("/post", (req, res) => {
     .end();
 });
 
-app.get("/db", (req, res) => {
+app.get("/posts-db", (req, res) => {
   res.status(200).send(`
   <p>Post service DB</p>
   <pre>${JSON.stringify(DB, null, "\t")}</pre>

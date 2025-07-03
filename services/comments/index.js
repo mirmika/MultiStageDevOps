@@ -76,7 +76,7 @@ app.post('/events', async (req, res) => {
 })
 
 
-app.get('/db', (req, res) => {
+app.get('/comments-db', (req, res) => {
   res.status(200).send(`
   <p>Comments service DB</p>
   <pre>${JSON.stringify(DB, null, "\t")}</pre>

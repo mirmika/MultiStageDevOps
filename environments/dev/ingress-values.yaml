@@ -1,15 +1,9 @@
 namespace: development
-
-host: dev.local
-
 ingressClassName: nginx
-
+host: dev.local
 annotations:
-  kubernetes.io/ingress.class: nginx
   nginx.ingress.kubernetes.io/use-regex: "true"
-
 paths:
-  # Frontend Client at root
   - path: /
     serviceName: client
     servicePort: 3000

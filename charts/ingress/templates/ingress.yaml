@@ -12,8 +12,9 @@ spec:
   rules:
     - host: {{ .Values.host }}
       http:
+        {{- if .Values.paths }}
         paths:
-{{- range .Values.paths }}
+        {{- range .Values.paths }}
           - path: {{ .path }}
             pathType: {{ .pathType | default "Prefix" }}
             backend:
@@ -21,4 +22,5 @@ spec:
                 name: {{ .serviceName }}
                 port:
                   number: {{ .servicePort }}
-{{- end }}
+        {{- end }}
+        {{- end }}

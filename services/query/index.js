@@ -59,7 +59,7 @@ app.get("/posts", (req, res) => {
   });
 });
 
-app.get("/db", (req, res) => {
+app.get("/query-db", (req, res) => {
   res.status(200).send(`
   <p>Query service DB</p>
   <pre>${JSON.stringify(DB, null, "\t")}</pre>
